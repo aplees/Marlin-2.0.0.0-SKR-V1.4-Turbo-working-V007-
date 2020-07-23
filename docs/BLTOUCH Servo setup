@@ -1,0 +1,18 @@
+Comment out the line in Configuration.H:
+//#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
+
+and define:
+#define Z_MIN_PROBE_PIN P0_10
+
+Open Conditionals_LCD.h located in ..Marlin\src\inc.. and change these lines:
+#define HAS_CUSTOM_PROBE_PIN DISABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)
+#define HOMING_Z_WITH_PROBE (Z_HOME_DIR < 0 &&!HAS_CUSTOM_PROBE_PIN)
+
+to:
+#define HAS_CUSTOM_PROBE_PIN true
+#define HOMING_Z_WITH_PROBE (Z_HOME_DIR < 0)
+
+Basically Marlin doesn't let the printer home the Z-axis with the probe when an end-stop is connected. When I get time, I'll mess around some more and try to add some lines so that the end-stop can be used as a fail-safe in case of probe failure (which is probably the original code's intent).
+
+My BLTouch is fully functional and tested with this method. Just keep an eye on it because I'm not sure if the end-stop will do anything if the probe doesn't home properly.
+
